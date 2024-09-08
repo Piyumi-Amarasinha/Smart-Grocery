@@ -1,0 +1,19 @@
+.color {
+  background-color: rgb(255, 127, 191) !important;
+}
+table {
+  border-collapse: inherit !important;
+}
+.thead-light {
+  background-color: rgb(182, 157, 104) !important;
+  font-weight: 400 !important;
+}
+.thead-light th {
+  font-weight: 500 !important;
+}
+table tbody tr td {
+  cursor: pointer !important;
+}
+tr:hover {
+  background-color: rgb(35, 182, 182) !important;
+}
