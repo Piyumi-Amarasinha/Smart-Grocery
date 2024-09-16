@@ -1,1 +1,200 @@
-<p>add-product works!</p>
+<div class="add-product-section mt-3">
+  <div class="box-head">
+    <h1 class="pr-name">Add a new product</h1>
+  </div>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="row g-3">
+    <div class="form-group">
+      <label class="form-label">Product Name</label>
+      <input type="text" class="form-control" formControlName="productName" />
+      <div
+        *ngIf="
+          f['productName'].touched &&
+          f['productName'].invalid &&
+          f['productName'].errors
+        "
+        Class="error"
+      >
+        Product name is required!
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Product Description</label>
+      <input type="text" class="form-control" formControlName="description" />
+      <div
+        *ngIf="
+          f['description'].touched &&
+          f['description'].invalid &&
+          f['description'].errors
+        "
+        Class="error"
+      >
+        Product description is required!
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label">Product Category</label>
+          <select class="form-control" formControlName="category">
+            <option>Rice</option>
+            <option>Sugar</option>
+            <option>Dhal</option>
+            <option>Flour</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Brand</label>
+          <select class="form-control" formControlName="brand">
+            <option>Rice</option>
+            <option>Sugar</option>
+            <option>Dhal</option>
+            <option>Flour</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Batch Number</label>
+          <select class="form-control" formControlName="batchNumber">
+            <option>Rice</option>
+            <option>Sugar</option>
+            <option>Dhal</option>
+            <option>Flour</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">Expiry Date</label>
+          <input
+            type="date"
+            class="form-control"
+            formControlName="expireDate"
+          />
+        </div>
+        <div
+          *ngIf="
+            f['expireDate'].touched &&
+            f['expireDate'].invalid &&
+            f['expireDate'].errors
+          "
+          Class="error"
+        >
+          Expiry Date is required!
+        </div>
+        <div
+          *ngIf="
+            f['expireDate'].touched &&
+            f['expireDate'].invalid &&
+            f['expireDate'].errors
+          "
+          Class="error"
+        >
+          Expiry Date should be a valid format!
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Manufactured Date</label>
+          <input
+            type="date"
+            class="form-control"
+            formControlName="manufacturedDate"
+          />
+        </div>
+        <div
+          *ngIf="
+            f['manufacturedDate'].touched &&
+            f['manufacturedDate'].invalid &&
+            f['manufacturedDate'].errors
+          "
+          Class="error"
+        >
+          manufactured Date is required!
+        </div>
+        <div
+          *ngIf="
+            f['manufacturedDate'].touched &&
+            f['manufacturedDate'].invalid &&
+            f['manufacturedDate'].errors
+          "
+          Class="error"
+        >
+          Manufactured Date should be a valid format!
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">Unit Price</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="quantity"
+          />
+        </div>
+        <div
+          *ngIf="
+            f['unitPrice'].touched &&
+            f['unitPrice'].invalid &&
+            f['unitPrice'].errors
+          "
+          Class="error"
+        >
+          Unit price is required!
+        </div>
+        <div
+          *ngIf="
+            f['unitPrice'].touched &&
+            f['unitPrice'].invalid &&
+            f['unitPrice'].errors
+          "
+          Class="error"
+        >
+          unitPrice should be a valid value!
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Quantity</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="quantity"
+          />
+        </div>
+        <div
+          *ngIf="
+            f['quantity'].touched &&
+            f['quantity'].invalid &&
+            f['quantity'].errors
+          "
+          Class="error"
+        >
+          Quantity is required!
+        </div>
+        <div
+          *ngIf="
+            f['quantity'].touched &&
+            f['quantity'].invalid &&
+            f['quantity'].errors
+          "
+          Class="error"
+        >
+          At least 50 item required to add a product!
+        </div>
+      </div>
+    </div>
+    <div class="col-12 text-end mt-5">
+      <button type="button" class="btn btn btn-outline-secondary me-2">
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-outline-primary"
+        [disabled]="productForm.invalid"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

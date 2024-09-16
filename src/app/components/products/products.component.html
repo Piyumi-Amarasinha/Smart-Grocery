@@ -1,9 +1,36 @@
 <div class="container-fluid main-content">
   <div class="row">
-    <section class="col-md-12">
-      <div class="mt-3 mb-3">
-        <h3>Product List</h3>
+    <section [ngClass]="showAddProduct ? 'col-md-7' : 'col-md-12'">
+      <div class="product-header">
+        <h1>
+          Product List
+          <span *ngIf="!isLoading" (click)="refresh()" style="cursor: pointer">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+          </span>
+          <i
+            *ngIf="isLoading"
+            class="fa fa-refresh fa-spin fa-fw"
+            aria-hidden="true"
+          ></i>
+        </h1>
+        <button
+          *ngIf="!showAddProduct"
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="showAddProducts()"
+        >
+          Add Product
+        </button>
+        <button
+          *ngIf="showAddProduct"
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="hideAddProducts()"
+        >
+          Close Product
+        </button>
       </div>
+
       <table class="table">
         <thead class="thead-light t-head">
           <tr>
@@ -12,63 +39,53 @@
             <th scope="col">Product description</th>
             <th scope="col">Created Date</th>
             <th scope="col">Quantity in Kgs</th>
+            <th scope="col">Availability</th>
             <th scope="col">Unit Price</th>
             <th scope="col">Product Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>{{ firstroductitemName }}</td>
-            <td>White basmathi Rice Imported from Pakistan</td>
-            <td>Jan 29, 2026</td>
-            <td>100</td>
-            <td>Rs. 400</td>
+          <tr
+            *ngFor="let product of products; let i = index"
+            (click)="selectProduct(i)"
+            [ngClass]="rowIndex == i ? 'active' : ''"
+          >
+            <th scope="row">{{ product.productId }}</th>
+            <td>{{ product.productName }}</td>
+            <td>{{ product.productDescription }}</td>
+            <td>{{ product.createdDate }}</td>
+            <td>{{ product.quantity }}</td>
             <td>
-              <i class="fa fa-eye icon"></i>
-              <i class="fa fa-pencil-square-o icon"></i>
+              <p *ngIf="product.quantity <= 50">Lower Inventory Level</p>
+              <p *ngIf="product.quantity > 50">Sufficient Inventory Level</p>
             </td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Flour</td>
-            <td>White basmathi Rice Imported from Pakistan</td>
-            <td>Jan 29, 2025</td>
-            <td>50</td>
-            <td>Rs. 190</td>
-            <td>
-              <i class="fa fa-eye icon"></i>
-              <i class="fa fa-pencil-square-o icon"></i>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Sugar</td>
-            <td>White basmathi Rice Imported from Pakistan</td>
-            <td>Des 29, 2024</td>
-            <td>1200</td>
-            <td>Rs. 200</td>
-            <td>
-              <i class="fa fa-eye icon"></i>
-              <i class="fa fa-pencil-square-o icon"></i>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">4</th>
-            <td>Dhal</td>
-            <td>White basmathi Rice Imported from Pakistan</td>
-            <td>May 29, 2025</td>
-            <td [ngClass]="isLowInventory ? 'bg-danger' : ''">
-              {{ getDhalStorage() }}
-            </td>
-            <td>Rs. 320</td>
-            <td>
-              <i class="fa fa-eye icon"></i>
-              <i class="fa fa-pencil-square-o icon"></i>
+            <td>{{ product.unitPrice | currency }}</td>
+
+            <td colspan="3">
+              <button
+                type="button"
+                [disabled]="rowIndex != i"
+                class="btn-xs icon"
+              >
+                <i class="fa fa-eye"></i>
+              </button>
+              <button
+                type="button"
+                [disabled]="rowIndex != i"
+                class="btn-xs icon"
+                (click)="openEditProductView()"
+              >
+                <i class="fa fa-pencil-square"></i>
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
+    </section>
+
+    <section class="col-md-5" *ngIf="showAddProduct || showEditProduct">
+      <app-add-product *ngIf="showAddProduct"></app-add-product>
+      <app-edit-product *ngIf="showEditProduct"></app-edit-product>
     </section>
   </div>
 </div>

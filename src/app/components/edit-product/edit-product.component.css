@@ -1,4 +1,4 @@
-.add-product-section {
+edit-product-section {
   background-color: #ecf3ff;
   border-radius: 10px;
   padding: 20px;
@@ -7,22 +7,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 1px solid #c8daf8;
+  border-bottom: 1px solid #c8daf8;
   margin-bottom: 20px;
   padding-bottom: 10px;
 }
 .pr-name {
   font-size: 22px;
   color: rgb(65, 65, 65);
-}
-input.ng-invalid.ng-touched {
-  border: 1px solid red;
-}
-
-.error {
-  color: red;
-}
-.btn-outline-primary.disabled {
-  color: #414750;
-  background-color: #c3cddd;
 }
