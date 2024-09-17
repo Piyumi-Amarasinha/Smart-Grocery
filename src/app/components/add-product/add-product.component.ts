@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Product } from '../../model/product.model';
 import { ProductService } from '../../service/product.service';
+import { EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-add-product',
@@ -19,6 +20,9 @@ import { ProductService } from '../../service/product.service';
 export class AddProductComponent implements OnInit {
   productForm!: FormGroup;
 
+  isDataUploading = true;
+  @Output() productAddEvent: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closeAddEvent: EventEmitter<void> = new EventEmitter<void>();
   constructor(
     private fb: FormBuilder,
     private productService: ProductService
@@ -46,8 +50,16 @@ export class AddProductComponent implements OnInit {
   onSubmit() {
     const values = this.productForm.value as Product;
     values.createdDate = new Date().toDateString();
+    this.isDataUploading = true;
     this.productService.addProduct(values as Product).subscribe((res) => {
+      debugger;
+      this.isDataUploading = false;
+      this.productAddEvent.emit();
       this.productForm.reset();
     });
+  }
+
+  cancel() {
+    this.closeAddEvent.emit();
   }
 }

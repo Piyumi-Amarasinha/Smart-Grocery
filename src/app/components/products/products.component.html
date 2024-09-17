@@ -4,14 +4,14 @@
       <div class="product-header">
         <h1>
           Product List
-          <span *ngIf="!isLoading" (click)="refresh()" style="cursor: pointer">
+          <!-- <span *ngIf="!isLoading" (click)="refresh()" style="cursor: pointer">
             <i class="fa fa-refresh" aria-hidden="true"></i>
           </span>
           <i
             *ngIf="isLoading"
             class="fa fa-refresh fa-spin fa-fw"
             aria-hidden="true"
-          ></i>
+          ></i> -->
         </h1>
         <button
           *ngIf="!showAddProduct"
@@ -20,14 +20,6 @@
           (click)="showAddProducts()"
         >
           Add Product
-        </button>
-        <button
-          *ngIf="showAddProduct"
-          type="button"
-          class="btn btn-outline-primary"
-          (click)="hideAddProducts()"
-        >
-          Close Product
         </button>
       </div>
 
@@ -47,7 +39,7 @@
         <tbody>
           <tr
             *ngFor="let product of products; let i = index"
-            (click)="selectProduct(i)"
+            (click)="selectProduct(i, product.productId)"
             [ngClass]="rowIndex == i ? 'active' : ''"
           >
             <th scope="row">{{ product.productId }}</th>
@@ -60,7 +52,6 @@
               <p *ngIf="product.quantity > 50">Sufficient Inventory Level</p>
             </td>
             <td>{{ product.unitPrice | currency }}</td>
-
             <td colspan="3">
               <button
                 type="button"
@@ -84,8 +75,16 @@
     </section>
 
     <section class="col-md-5" *ngIf="showAddProduct || showEditProduct">
-      <app-add-product *ngIf="showAddProduct"></app-add-product>
-      <app-edit-product *ngIf="showEditProduct"></app-edit-product>
+      <app-add-product
+        *ngIf="showAddProduct"
+        (productAddEvent)="updateProductList()"
+        (closeAddEvent)="closeAddView()"
+      ></app-add-product>
+      <app-edit-product
+        *ngIf="showEditProduct"
+        [productId]="selectedProductId"
+        (cancelEditEvent)="CloseEditView()"
+      ></app-edit-product>
     </section>
   </div>
 </div>

@@ -1,6 +1,7 @@
 <div class="add-product-section mt-3">
   <div class="box-head">
     <h1 class="pr-name">Add a new product</h1>
+    <button type="button" class="btn btn-light" (click)="cancel()">X</button>
   </div>
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="row g-3">
     <div class="form-group">
@@ -44,21 +45,15 @@
         </div>
         <div class="col-md-4">
           <label class="form-label">Brand</label>
-          <select class="form-control" formControlName="brand">
-            <option>Rice</option>
-            <option>Sugar</option>
-            <option>Dhal</option>
-            <option>Flour</option>
-          </select>
+          <input type="text" class="form-control" formControlName="brand" />
         </div>
         <div class="col-md-4">
           <label class="form-label">Batch Number</label>
-          <select class="form-control" formControlName="batchNumber">
-            <option>Rice</option>
-            <option>Sugar</option>
-            <option>Dhal</option>
-            <option>Flour</option>
-          </select>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="batchNumber"
+          />
         </div>
       </div>
     </div>

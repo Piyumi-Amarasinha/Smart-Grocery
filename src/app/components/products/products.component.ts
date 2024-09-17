@@ -25,17 +25,19 @@ export class ProductsComponent implements OnInit {
   showAddProduct!: boolean;
   isLoading: boolean = false;
   showEditProduct!: boolean;
+  selectedProductId!: number;
 
   ngOnInit(): void {
-    this.checkDhalStorage();
+    // this.checkDhalStorage();
     this.getProduct();
   }
 
   public products: Product[] = [];
 
-  public selectProduct(selectedRow: number): void {
+  public selectProduct(selectedRow: number, selectedId: String) {
     // this.isRowSelected = true;
     this.rowIndex = selectedRow;
+    this.selectedProductId = Number(selectedId);
   }
 
   showAddProducts() {
@@ -54,7 +56,11 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  refresh() {
+  // refresh() {
+  //   this.getProduct();
+  // }
+
+  updateProductList() {
     this.getProduct();
   }
 
@@ -62,14 +68,22 @@ export class ProductsComponent implements OnInit {
     this.showEditProduct = true;
   }
 
-  public getDhalStorage() {
-    return this.dhalStorage;
+  CloseEditView() {
+    this.showEditProduct = false;
   }
 
-  public checkDhalStorage() {
-    if (this.dhalStorage < 50) {
-      this.isLowInventory = true;
-      this.cdr.detectChanges();
-    }
+  closeAddView() {
+    this.showAddProduct = false;
   }
+
+  // public getDhalStorage() {
+  //   return this.dhalStorage;
+  // }
+
+  // public checkDhalStorage() {
+  //   if (this.dhalStorage < 50) {
+  //     this.isLowInventory = true;
+  //     this.cdr.detectChanges();
+  //   }
+  // }
 }
