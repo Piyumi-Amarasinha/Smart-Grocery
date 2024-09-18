@@ -3,7 +3,7 @@
     <section [ngClass]="showAddProduct ? 'col-md-7' : 'col-md-12'">
       <div class="product-header">
         <h1>
-          Product List
+          Product List {{ message }}
           <!-- <span *ngIf="!isLoading" (click)="refresh()" style="cursor: pointer">
             <i class="fa fa-refresh" aria-hidden="true"></i>
           </span>
@@ -39,7 +39,7 @@
         <tbody>
           <tr
             *ngFor="let product of products; let i = index"
-            (click)="selectProduct(i, product.productId)"
+            (click)="selectProduct(i, product)"
             [ngClass]="rowIndex == i ? 'active' : ''"
           >
             <th scope="row">{{ product.productId }}</th>
@@ -82,9 +82,11 @@
       ></app-add-product>
       <app-edit-product
         *ngIf="showEditProduct"
-        [productId]="selectedProductId"
+        [product]="selectedProduct"
         (cancelEditEvent)="CloseEditView()"
+        (productAddEvent)="updateProductList()"
       ></app-edit-product>
     </section>
+    <app-view-product-details></app-view-product-details>
   </div>
 </div>

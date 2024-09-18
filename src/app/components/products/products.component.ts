@@ -1,13 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../model/product.model';
 import { ProductService } from '../../service/product.service';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { EditProductComponent } from '../edit-product/edit-product.component';
+import { ViewProductDetailsComponent } from '../view-product-details/view-product-details.component';
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, AddProductComponent, EditProductComponent],
+  imports: [
+    CommonModule,
+    AddProductComponent,
+    EditProductComponent,
+    ViewProductDetailsComponent,
+  ],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
 })
@@ -25,22 +31,33 @@ export class ProductsComponent implements OnInit {
   showAddProduct!: boolean;
   isLoading: boolean = false;
   showEditProduct!: boolean;
-  selectedProductId!: number;
+  selectedProduct!: Product;
+  message!: string;
+  @ViewChild(ViewProductDetailsComponent)
+  viewComponent!: ViewProductDetailsComponent;
 
   ngOnInit(): void {
     // this.checkDhalStorage();
     this.getProduct();
   }
 
+  ngAfterViewUnit() {
+    this.message = this.viewComponent.childMessage;
+  }
+
   public products: Product[] = [];
 
-  public selectProduct(selectedRow: number, selectedId: String) {
+  public selectProduct(selectedRow: number, product: Product) {
     // this.isRowSelected = true;
     this.rowIndex = selectedRow;
-    this.selectedProductId = Number(selectedId);
+    this.selectedProduct = product;
   }
 
   showAddProducts() {
+    if (this.showEditProduct) {
+      this.showEditProduct = false;
+    }
+
     this.showAddProduct = true;
   }
 
@@ -65,6 +82,9 @@ export class ProductsComponent implements OnInit {
   }
 
   openEditProductView() {
+    if (this.showAddProduct) {
+      this.showAddProduct = false;
+    }
     this.showEditProduct = true;
   }
 

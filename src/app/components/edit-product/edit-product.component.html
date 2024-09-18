@@ -3,5 +3,74 @@
     <h1 class="pr-name">Edit Product</h1>
     <button type="button" class="btn btn-light" (click)="cancel()">X</button>
   </div>
-  <p>product id - {{ productId }}</p>
+  <form class="row g-3" #form="ngForm" (ngSubmit)="onSubmit()">
+    <!-- <div class="col-md-11">
+      <div class="form-group">
+        <label class="form-label">Product Name</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="product.productName"
+          name="productName"
+        />
+      </div>
+    </div> -->
+
+    <!-- <div class="col-md-11">
+      <div class="form-group">
+        <label class="form-label">Product Description</label>
+        <input
+          type="text"
+          class="form-control"
+          #description="ngModel"
+          [(ngModel)]="product.productDescription"
+          name="description"
+        />
+      </div>
+    </div> -->
+    <!-- <div class="row mt-3">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="form-label">Quantity</label>
+          <input
+            type="number"
+            class="form-control"
+            #quantity="ngModel"
+            [(ngModel)]="product.quantity"
+            name="quantity"
+          />
+        </div>
+      </div>
+    </div> -->
+
+    <!-- <div class="col-md-3">
+      <div class="form-group">
+        <label class="form-label">Unit Price</label>
+        <input
+          type="number"
+          class="form-control"
+          #unitPrice="ngModel"
+          [(ngModel)]="product.unitPrice"
+          name="unitPrice"
+        />
+      </div>
+    </div> -->
+    <div class="col-12 text-end mt-5">
+      <button
+        type="button"
+        class="btn btn-outline-secondary me-2"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-outline-primary"
+        [disabled]="form.invalid"
+      >
+        Update Product
+        <i *ngIf="isDataUploading" class="fa fa-spinner fa-pulse fa-fw"></i>
+      </button>
+    </div>
+  </form>
 </div>
