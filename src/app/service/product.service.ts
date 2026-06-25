@@ -1,58 +1,53 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { from } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Product } from '../model/product.model';
 import { AddProductResponse } from '../model/add-product-response.model';
 import { ProductResponse } from '../model/product-response.model';
+import { ProductDetailResponse } from '../model/product-detail-response.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  private baseUrl = 'http://192.168.8.1/html/home.html';
+  private baseUrl = '/api/products';
 
-  // Method to add a product using fetch
-  addProduct(product: Product): Observable<AddProductResponse> {
-    const options = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product),
-    };
+  constructor(private http: HttpClient) {}
 
-    // Using from() to convert promise to observable
-    return from(
-      fetch(`${this.baseUrl}/api/product`, options)
-        .then((response) => response.json())
-        .then((data) => data as AddProductResponse)
-    );
-  }
-
-  // Method to get products using fetch
   getProducts(): Observable<ProductResponse> {
-    const options = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    };
-    // Using from() to convert promise to observable
-    return from(
-      fetch(`${this.baseUrl}/api/product`, options)
-        .then((response) => response.json())
-        .then((data) => data as ProductResponse)
-    );
+    return this.http
+      .get<ProductResponse>(this.baseUrl)
+      .pipe(catchError(this.handleError));
   }
 
-  // Method to put products using fetch
-  updateProducts(product: Product): Observable<ProductResponse> {
-    const options = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product),
-    };
-    // Using from() to convert promise to observable
-    return from(
-      fetch(`${this.baseUrl}/api/product`, options)
-        .then((response) => response.json())
-        .then((data) => data as ProductResponse)
-    );
+  getProduct(id: number): Observable<ProductDetailResponse> {
+    return this.http
+      .get<ProductDetailResponse>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  addProduct(product: Product): Observable<AddProductResponse> {
+    return this.http
+      .post<AddProductResponse>(this.baseUrl, product)
+      .pipe(catchError(this.handleError));
+  }
+
+  updateProduct(
+    id: number,
+    product: Product
+  ): Observable<ProductDetailResponse> {
+    return this.http
+      .put<ProductDetailResponse>(`${this.baseUrl}/${id}`, product)
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteProduct(id: number): Observable<{ message: string }> {
+    return this.http
+      .delete<{ message: string }>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: unknown) {
+    return throwError(() => error);
   }
 }

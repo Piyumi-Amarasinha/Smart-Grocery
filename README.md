@@ -4,7 +4,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+This app has two parts that both need to be running: the Angular frontend and a small local Express API (backed by a JSON file) that the frontend talks to for product data.
+
+1. Start the API (in one terminal): `npm run api` — listens on `http://localhost:4000`.
+2. Start the frontend (in another terminal): `npm start` (same as `ng serve`) — navigate to `http://localhost:4200/`. The dev server proxies `/api` requests to the API on port 4000 (see `proxy.conf.json`), and reloads automatically on source changes.
+
+Product data lives in `server/api/products.json`, which is created automatically from the seed data in `server/api/products.seed.json` the first time the API runs. Delete `products.json` and restart the API to reset to the seed data.
 
 ## Code scaffolding
 

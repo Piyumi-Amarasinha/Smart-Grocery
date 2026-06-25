@@ -1,1 +1,57 @@
-<p>view-product-details works!</p>
+<div class="view-product-section mt-3">
+  <div class="box-head">
+    <h1 class="pr-name">Product Details</h1>
+    <a routerLink="/products" class="btn btn-light">Back to list</a>
+  </div>
+
+  <div *ngIf="loadError" class="alert alert-danger">{{ loadError }}</div>
+  <div *ngIf="isLoading" class="text-center my-4">Loading product...</div>
+
+  <div *ngIf="product" class="detail-card">
+    <div class="detail-header">
+      <h2>{{ product.productName }}</h2>
+      <div>
+        <span *ngIf="isExpired(product)" class="badge bg-danger me-1">Expired</span>
+        <span *ngIf="!isExpired(product) && isExpiringSoon(product)" class="badge bg-expiring me-1">Expiring Soon</span>
+        <span *ngIf="isLowStock(product)" class="badge bg-warning text-dark me-1">Low Stock</span>
+        <span *ngIf="!isExpired(product) && !isExpiringSoon(product) && !isLowStock(product)" class="badge bg-success">OK</span>
+      </div>
+    </div>
+
+    <dl class="row mt-3">
+      <dt class="col-sm-3">Product Id</dt>
+      <dd class="col-sm-9">{{ product.productId }}</dd>
+
+      <dt class="col-sm-3">Description</dt>
+      <dd class="col-sm-9">{{ product.productDescription }}</dd>
+
+      <dt class="col-sm-3">Category</dt>
+      <dd class="col-sm-9">{{ product.category }}</dd>
+
+      <dt class="col-sm-3">Brand</dt>
+      <dd class="col-sm-9">{{ product.brand }}</dd>
+
+      <dt class="col-sm-3">Batch Number</dt>
+      <dd class="col-sm-9">{{ product.batchNumber }}</dd>
+
+      <dt class="col-sm-3">Manufactured Date</dt>
+      <dd class="col-sm-9">{{ product.manufacturedDate }}</dd>
+
+      <dt class="col-sm-3">Expiry Date</dt>
+      <dd class="col-sm-9">{{ product.expireDate }}</dd>
+
+      <dt class="col-sm-3">Created Date</dt>
+      <dd class="col-sm-9">{{ product.createdDate }}</dd>
+
+      <dt class="col-sm-3">Quantity</dt>
+      <dd class="col-sm-9">{{ product.quantity }}</dd>
+
+      <dt class="col-sm-3">Unit Price</dt>
+      <dd class="col-sm-9">{{ product.unitPrice | currency }}</dd>
+    </dl>
+
+    <div class="text-end">
+      <a [routerLink]="['/products', product.productId, 'edit']" class="btn btn-outline-primary">Edit Product</a>
+    </div>
+  </div>
+</div>

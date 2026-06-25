@@ -11,6 +11,13 @@
 npm-debug.log
 yarn-error.log
 
+# Local API runtime data (seeded from server/api/products.seed.json on first run)
+/server/api/products.json
+
+# Environment files
+.env
+.env.*
+
 # IDEs and editors
 .idea/
 .project

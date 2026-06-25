@@ -6,9 +6,9 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Product } from '../../model/product.model';
 import { ProductService } from '../../service/product.service';
-import { EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-add-product',
@@ -19,27 +19,26 @@ import { EventEmitter, Output } from '@angular/core';
 })
 export class AddProductComponent implements OnInit {
   productForm!: FormGroup;
+  isSubmitting = false;
+  submitError: string | null = null;
 
-  isDataUploading = true;
-  @Output() productAddEvent: EventEmitter<void> = new EventEmitter<void>();
-  @Output() closeAddEvent: EventEmitter<void> = new EventEmitter<void>();
   constructor(
     private fb: FormBuilder,
-    private productService: ProductService
+    private productService: ProductService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
       productName: ['', Validators.required],
-      description: ['', Validators.required],
+      productDescription: ['', Validators.required],
       category: ['', Validators.required],
       brand: ['', Validators.required],
+      batchNumber: ['', Validators.required],
       expireDate: ['', Validators.required],
       manufacturedDate: ['', Validators.required],
-      batchNumber: ['', Validators.required],
       unitPrice: ['', [Validators.required, Validators.min(1)]],
       quantity: ['', [Validators.required, Validators.min(1)]],
-      createdDate: ['', Validators.required],
     });
   }
 
@@ -47,19 +46,27 @@ export class AddProductComponent implements OnInit {
     return this.productForm.controls;
   }
 
-  onSubmit() {
-    const values = this.productForm.value as Product;
-    values.createdDate = new Date().toDateString();
-    this.isDataUploading = true;
-    this.productService.addProduct(values as Product).subscribe((res) => {
-      debugger;
-      this.isDataUploading = false;
-      this.productAddEvent.emit();
-      this.productForm.reset();
+  onSubmit(): void {
+    if (this.productForm.invalid) {
+      return;
+    }
+    const product = {
+      ...this.productForm.value,
+      createdDate: new Date().toISOString().slice(0, 10),
+    } as Product;
+
+    this.isSubmitting = true;
+    this.submitError = null;
+    this.productService.addProduct(product).subscribe({
+      next: () => this.router.navigate(['/products']),
+      error: () => {
+        this.isSubmitting = false;
+        this.submitError = 'Failed to add product. Please try again.';
+      },
     });
   }
 
-  cancel() {
-    this.closeAddEvent.emit();
+  cancel(): void {
+    this.router.navigate(['/products']);
   }
 }

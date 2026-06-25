@@ -1,92 +1,141 @@
 <div class="container-fluid main-content">
-  <div class="row">
-    <section [ngClass]="showAddProduct ? 'col-md-7' : 'col-md-12'">
-      <div class="product-header">
-        <h1>
-          Product List {{ message }}
-          <!-- <span *ngIf="!isLoading" (click)="refresh()" style="cursor: pointer">
-            <i class="fa fa-refresh" aria-hidden="true"></i>
-          </span>
-          <i
-            *ngIf="isLoading"
-            class="fa fa-refresh fa-spin fa-fw"
-            aria-hidden="true"
-          ></i> -->
-        </h1>
-        <button
-          *ngIf="!showAddProduct"
-          type="button"
-          class="btn btn-outline-primary"
-          (click)="showAddProducts()"
-        >
-          Add Product
-        </button>
-      </div>
-
-      <table class="table">
-        <thead class="thead-light t-head">
-          <tr>
-            <th scope="col">Product Id</th>
-            <th scope="col">Product Name</th>
-            <th scope="col">Product description</th>
-            <th scope="col">Created Date</th>
-            <th scope="col">Quantity in Kgs</th>
-            <th scope="col">Availability</th>
-            <th scope="col">Unit Price</th>
-            <th scope="col">Product Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let product of products; let i = index"
-            (click)="selectProduct(i, product)"
-            [ngClass]="rowIndex == i ? 'active' : ''"
-          >
-            <th scope="row">{{ product.productId }}</th>
-            <td>{{ product.productName }}</td>
-            <td>{{ product.productDescription }}</td>
-            <td>{{ product.createdDate }}</td>
-            <td>{{ product.quantity }}</td>
-            <td>
-              <p *ngIf="product.quantity <= 50">Lower Inventory Level</p>
-              <p *ngIf="product.quantity > 50">Sufficient Inventory Level</p>
-            </td>
-            <td>{{ product.unitPrice | currency }}</td>
-            <td colspan="3">
-              <button
-                type="button"
-                [disabled]="rowIndex != i"
-                class="btn-xs icon"
-              >
-                <i class="fa fa-eye"></i>
-              </button>
-              <button
-                type="button"
-                [disabled]="rowIndex != i"
-                class="btn-xs icon"
-                (click)="openEditProductView()"
-              >
-                <i class="fa fa-pencil-square"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section class="col-md-5" *ngIf="showAddProduct || showEditProduct">
-      <app-add-product
-        *ngIf="showAddProduct"
-        (productAddEvent)="updateProductList()"
-        (closeAddEvent)="closeAddView()"
-      ></app-add-product>
-      <app-edit-product
-        *ngIf="showEditProduct"
-        [product]="selectedProduct"
-        (cancelEditEvent)="CloseEditView()"
-        (productAddEvent)="updateProductList()"
-      ></app-edit-product>
-    </section>
-    <app-view-product-details></app-view-product-details>
+  <div class="product-header">
+    <h1>Product List</h1>
+    <a routerLink="/products/new" class="btn btn-outline-primary">Add Product</a>
   </div>
+
+  <div class="summary-strip d-flex flex-wrap gap-2 mb-3">
+    <span class="badge bg-warning text-dark">Low stock: {{ summary().lowStock }}</span>
+    <span class="badge bg-expiring">Expiring soon: {{ summary().expiringSoon }}</span>
+    <span class="badge bg-danger">Expired: {{ summary().expired }}</span>
+  </div>
+
+  <div class="toolbar d-flex flex-wrap gap-2 align-items-center mb-3">
+    <label for="search-input" class="visually-hidden">Search products</label>
+    <input
+      id="search-input"
+      type="text"
+      class="form-control"
+      style="max-width: 260px"
+      placeholder="Search products..."
+      [value]="searchTerm()"
+      (input)="onSearchChange($event)"
+    />
+    <label for="category-filter" class="visually-hidden">Filter by category</label>
+    <select
+      id="category-filter"
+      class="form-select"
+      style="max-width: 200px"
+      [value]="categoryFilter()"
+      (change)="onCategoryChange($event)"
+    >
+      <option value="all">All Categories</option>
+      <option *ngFor="let category of categories()" [value]="category">{{ category }}</option>
+    </select>
+    <label for="stock-filter" class="visually-hidden">Filter by stock status</label>
+    <select
+      id="stock-filter"
+      class="form-select"
+      style="max-width: 200px"
+      [value]="stockFilter()"
+      (change)="onStockFilterChange($event)"
+    >
+      <option value="all">All Stock Statuses</option>
+      <option value="low">Low Stock</option>
+      <option value="expiring">Expiring Soon</option>
+      <option value="expired">Expired</option>
+    </select>
+  </div>
+
+  <div *ngIf="loadError()" class="alert alert-danger">{{ loadError() }}</div>
+  <div *ngIf="isLoading()" class="text-center my-4">Loading products...</div>
+
+  <table class="table" *ngIf="!isLoading()">
+    <thead class="thead-light t-head">
+      <tr>
+        <th scope="col">Product Id</th>
+        <th scope="col">
+          <button type="button" class="sort-btn" (click)="toggleSort('productName')">
+            Product Name
+            <i class="fa" [ngClass]="sortKey() !== 'productName' ? 'fa-sort' : (sortDir() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc')"></i>
+          </button>
+        </th>
+        <th scope="col">Description</th>
+        <th scope="col">Category</th>
+        <th scope="col">Created Date</th>
+        <th scope="col">
+          <button type="button" class="sort-btn" (click)="toggleSort('quantity')">
+            Quantity
+            <i class="fa" [ngClass]="sortKey() !== 'quantity' ? 'fa-sort' : (sortDir() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc')"></i>
+          </button>
+        </th>
+        <th scope="col">
+          <button type="button" class="sort-btn" (click)="toggleSort('expireDate')">
+            Expiry Date
+            <i class="fa" [ngClass]="sortKey() !== 'expireDate' ? 'fa-sort' : (sortDir() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc')"></i>
+          </button>
+        </th>
+        <th scope="col">Status</th>
+        <th scope="col">
+          <button type="button" class="sort-btn" (click)="toggleSort('unitPrice')">
+            Unit Price
+            <i class="fa" [ngClass]="sortKey() !== 'unitPrice' ? 'fa-sort' : (sortDir() === 'asc' ? 'fa-sort-asc' : 'fa-sort-desc')"></i>
+          </button>
+        </th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of pagedProducts()">
+        <th scope="row">{{ product.productId }}</th>
+        <td>{{ product.productName }}</td>
+        <td>{{ product.productDescription }}</td>
+        <td>{{ product.category }}</td>
+        <td>{{ product.createdDate }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>{{ product.expireDate }}</td>
+        <td>
+          <span *ngIf="isExpired(product)" class="badge bg-danger me-1">Expired</span>
+          <span *ngIf="!isExpired(product) && isExpiringSoon(product)" class="badge bg-expiring me-1">Expiring Soon</span>
+          <span *ngIf="isLowStock(product)" class="badge bg-warning text-dark me-1">Low Stock</span>
+          <span *ngIf="!isExpired(product) && !isExpiringSoon(product) && !isLowStock(product)" class="badge bg-success">OK</span>
+        </td>
+        <td>{{ product.unitPrice | currency }}</td>
+        <td class="text-nowrap">
+          <a [routerLink]="['/products', product.productId]" class="btn-xs icon" title="View">
+            <i class="fa fa-eye"></i>
+          </a>
+          <a [routerLink]="['/products', product.productId, 'edit']" class="btn-xs icon" title="Edit">
+            <i class="fa fa-pencil-square"></i>
+          </a>
+          <button type="button" class="btn-xs icon" title="Delete" (click)="deleteProduct(product)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="pagedProducts().length === 0">
+        <td colspan="9" class="text-center text-muted py-4">No products match your filters.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <nav *ngIf="totalPages() > 1" class="d-flex justify-content-center gap-2 mt-3">
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary"
+      [disabled]="currentPage() === 1"
+      (click)="goToPage(currentPage() - 1)"
+    >
+      Prev
+    </button>
+    <span class="align-self-center">Page {{ currentPage() }} of {{ totalPages() }}</span>
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary"
+      [disabled]="currentPage() === totalPages()"
+      (click)="goToPage(currentPage() + 1)"
+    >
+      Next
+    </button>
+  </nav>
 </div>
