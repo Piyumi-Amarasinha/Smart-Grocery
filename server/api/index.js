@@ -1,74 +1,93 @@
-const fs = require('node:fs');
-const path = require('node:path');
+require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
+const mongoose = require('mongoose');
 const express = require('express');
 
-const DB_PATH = path.join(__dirname, 'products.json');
-const SEED_PATH = path.join(__dirname, 'products.seed.json');
+const productSchema = new mongoose.Schema({
+  productId: { type: Number, required: true, unique: true },
+  productName: String,
+  productDescription: String,
+  category: String,
+  brand: String,
+  batchNumber: String,
+  expireDate: String,
+  manufacturedDate: String,
+  createdDate: String,
+  quantity: Number,
+  unitPrice: Number,
+});
 
-if (!fs.existsSync(DB_PATH)) {
-  fs.copyFileSync(SEED_PATH, DB_PATH);
-}
+const Product = mongoose.model('Product', productSchema);
 
-function readDb() {
-  return JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
-}
-
-function writeDb(db) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
-}
+mongoose
+  .connect(process.env.DATABASE)
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
+  });
 
 const app = express();
 app.disable('x-powered-by');
 app.use(express.json());
 
-app.get('/api/products', (req, res) => {
-  const db = readDb();
-  res.json({ message: 'Products retrieved successfully', data: db.products });
-});
+const fields = { _id: 0, __v: 0 };
 
-app.get('/api/products/:id', (req, res) => {
-  const db = readDb();
-  const product = db.products.find((p) => p.productId === Number(req.params.id));
-  if (!product) {
-    return res.status(404).json({ message: 'Product not found' });
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await Product.find({}, fields).sort({ productId: 1 });
+    res.json({ message: 'Products retrieved successfully', data: products });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to retrieve products' });
   }
-  res.json({ message: 'Product retrieved successfully', data: product });
 });
 
-app.post('/api/products', (req, res) => {
-  const db = readDb();
-  const product = { ...req.body, productId: db.nextId };
-  db.products.push(product);
-  db.nextId += 1;
-  writeDb(db);
-  res.status(201).json({ message: 'Product added successfully', id: product.productId });
-});
-
-app.put('/api/products/:id', (req, res) => {
-  const db = readDb();
-  const id = Number(req.params.id);
-  const index = db.products.findIndex((p) => p.productId === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Product not found' });
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    const product = await Product.findOne({ productId: Number(req.params.id) }, fields);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    res.json({ message: 'Product retrieved successfully', data: product });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to retrieve product' });
   }
-  db.products[index] = { ...req.body, productId: id };
-  writeDb(db);
-  res.json({ message: 'Product updated successfully', data: db.products[index] });
 });
 
-app.delete('/api/products/:id', (req, res) => {
-  const db = readDb();
-  const id = Number(req.params.id);
-  const index = db.products.findIndex((p) => p.productId === id);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Product not found' });
+app.post('/api/products', async (req, res) => {
+  try {
+    const last = await Product.findOne().sort({ productId: -1 });
+    const productId = last ? last.productId + 1 : 1;
+    await Product.create({ ...req.body, productId });
+    res.status(201).json({ message: 'Product added successfully', id: productId });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to add product' });
   }
-  db.products.splice(index, 1);
-  writeDb(db);
-  res.json({ message: 'Product deleted successfully' });
 });
 
-const port = process.env['API_PORT'] || 4000;
-app.listen(port, () => {
-  console.log(`Smart Grocery API listening on http://localhost:${port}`);
+app.put('/api/products/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const product = await Product.findOneAndUpdate(
+      { productId: id },
+      { ...req.body, productId: id },
+      { new: true, projection: fields }
+    );
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    res.json({ message: 'Product updated successfully', data: product });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update product' });
+  }
 });
+
+app.delete('/api/products/:id', async (req, res) => {
+  try {
+    const result = await Product.findOneAndDelete({ productId: Number(req.params.id) });
+    if (!result) return res.status(404).json({ message: 'Product not found' });
+    res.json({ message: 'Product deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to delete product' });
+  }
+});
+
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log(`Smart Grocery API listening on http://localhost:${port}`));
