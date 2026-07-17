@@ -1,7 +1,17 @@
 <nav class="navbar navbar-dark color">
   <div class="container-fluid">
     <span class="navbar-brand mb-0 h1">Smart Grocery</span>
+    <button
+      *ngIf="auth.isLoggedIn()"
+      type="button"
+      class="btn btn-outline-light btn-sm"
+      (click)="auth.logout()"
+    >
+      <i class="fa fa-sign-out me-1"></i> Logout
+    </button>
   </div>
 </nav>
 
-<router-outlet></router-outlet>
+<div class="container-fluid px-4">
+  <router-outlet></router-outlet>
+</div>

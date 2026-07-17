@@ -1,0 +1,84 @@
+.login-wrapper {
+  min-height: calc(100vh - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f4ff;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(100, 130, 200, 0.15);
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.login-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #3a5bbf;
+  margin-bottom: 4px;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #444;
+}
+
+.btn-primary {
+  background-color: #4a72d5;
+  border-color: #4a72d5;
+  font-weight: 500;
+  padding: 10px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #3a5bbf;
+  border-color: #3a5bbf;
+}
+
+.btn-primary:disabled {
+  background-color: #a0b4e8;
+  border-color: #a0b4e8;
+}
+
+.field-error {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+input.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+
+.switch-link {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.switch-link a {
+  color: #4a72d5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.switch-link a:hover {
+  text-decoration: underline;
+}

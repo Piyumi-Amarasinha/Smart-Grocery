@@ -1,0 +1,72 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-header">
+      <h1 class="login-title">Smart Grocery</h1>
+      <p class="login-subtitle">Create Admin Account</p>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success py-2">{{ successMessage }}</div>
+
+    <form *ngIf="!successMessage" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="signupError" class="alert alert-danger py-2">{{ signupError }}</div>
+
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          id="username"
+          type="text"
+          class="form-control"
+          formControlName="username"
+          placeholder="Choose a username"
+          autocomplete="username"
+        />
+        <div *ngIf="f['username'].touched && f['username'].errors as errs" class="field-error">
+          <span *ngIf="errs['required']">Username is required</span>
+          <span *ngIf="errs['minlength']">At least 3 characters required</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="Choose a password"
+          autocomplete="new-password"
+        />
+        <div *ngIf="f['password'].touched && f['password'].errors as errs" class="field-error">
+          <span *ngIf="errs['required']">Password is required</span>
+          <span *ngIf="errs['minlength']">At least 6 characters required</span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          class="form-control"
+          formControlName="confirmPassword"
+          placeholder="Re-enter your password"
+          autocomplete="new-password"
+        />
+        <div *ngIf="passwordMismatch" class="field-error">Passwords do not match</div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="signupForm.invalid || isSubmitting"
+      >
+        <span *ngIf="isSubmitting">
+          <i class="fa fa-spinner fa-pulse fa-fw"></i> Creating account...
+        </span>
+        <span *ngIf="!isSubmitting">Create Account</span>
+      </button>
+    </form>
+
+    <p class="switch-link">Already have an account? <a routerLink="/login">Sign In</a></p>
+  </div>
+</div>
