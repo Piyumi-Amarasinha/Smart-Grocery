@@ -1,0 +1,27 @@
+.hero-banner {
+  margin-bottom: 24px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a6b3a 0%, #145730 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.hero-banner-image {
+  display: block;
+  width: 100%;
+  height: min(320px, 42vw);
+  min-height: 180px;
+  object-fit: cover;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

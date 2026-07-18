@@ -1,10 +1,30 @@
 <div class="page-wrapper">
   <div class="toolbar">
-    <input class="form-control search-input" type="text" placeholder="Search products..." (input)="onSearch($event)" />
-    <select class="form-select cat-select" (change)="onCategory($event)">
+    <label for="product-search" class="sr-only">Search products</label>
+    <input
+      id="product-search"
+      class="form-control search-input"
+      type="text"
+      placeholder="Search products..."
+      (input)="onSearch($event)"
+    />
+    <label for="category-filter" class="sr-only">Filter by category</label>
+    <select
+      id="category-filter"
+      class="form-select cat-select"
+      (change)="onCategory($event)"
+    >
       <option value="all">All Categories</option>
       <option *ngFor="let c of categories()" [value]="c">{{ c }}</option>
     </select>
+  </div>
+
+  <div class="hero-banner">
+    <img
+      src="/assert/hero%20banner.png"
+      alt="Hero banner"
+      class="hero-banner-image"
+    />
   </div>
 
   <div *ngIf="loadError()" class="alert alert-danger">{{ loadError() }}</div>
@@ -19,21 +39,25 @@
     <div class="product-card" *ngFor="let p of filtered()">
       <a [routerLink]="['/products', p.productId]" class="card-img-link">
         <img
-          [src]="p.imageUrl || 'https://placehold.co/300x200?text=' + p.productName"
+          [src]="
+            p.imageUrl || 'https://placehold.co/300x200?text=' + p.productName
+          "
           [alt]="p.productName"
           class="card-img"
         />
       </a>
       <div class="card-body">
         <span class="card-category">{{ p.category }}</span>
-        <a [routerLink]="['/products', p.productId]" class="card-title">{{ p.productName }}</a>
-        <p class="card-price">Rs. {{ p.unitPrice | number:'1.2-2' }}</p>
+        <a [routerLink]="['/products', p.productId]" class="card-title">{{
+          p.productName
+        }}</a>
+        <p class="card-price">Rs. {{ p.unitPrice | number: "1.2-2" }}</p>
         <button
           class="btn-add"
           [class.btn-added]="isAdded(p.productId)"
           (click)="addToCart(p)"
         >
-          {{ isAdded(p.productId) ? '✓ Added' : 'Add to Cart' }}
+          {{ isAdded(p.productId) ? "✓ Added" : "Add to Cart" }}
         </button>
       </div>
     </div>

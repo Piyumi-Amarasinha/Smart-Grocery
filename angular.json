@@ -121,10 +121,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/shared/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         }
       }
@@ -142,19 +139,20 @@
             "outputPath": "dist/retail",
             "index": "projects/retail/src/index.html",
             "browser": "projects/retail/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/retail/tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "projects/retail/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/retail/assert",
+                "output": "assert"
               }
             ],
-            "styles": [
-              "projects/retail/src/styles.css"
-            ],
+            "styles": ["projects/retail/src/styles.css"],
             "scripts": []
           },
           "configurations": {
@@ -203,10 +201,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/retail/tsconfig.spec.json",
             "assets": [
               {
@@ -214,9 +209,7 @@
                 "input": "projects/retail/public"
               }
             ],
-            "styles": [
-              "projects/retail/src/styles.css"
-            ],
+            "styles": ["projects/retail/src/styles.css"],
             "scripts": []
           }
         }
