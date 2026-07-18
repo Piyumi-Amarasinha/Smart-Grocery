@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
@@ -9,12 +10,13 @@ export class AuthService {
   private readonly TOKEN_KEY = 'sg_token';
   private readonly loginUrl = '/api/auth/login';
   private readonly registerUrl = '/api/auth/register';
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor(private http: HttpClient, private router: Router) {}
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.loginUrl, credentials).pipe(
-      tap((res) => localStorage.setItem(this.TOKEN_KEY, res.token))
+      tap((res) => this.isBrowser && localStorage.setItem(this.TOKEN_KEY, res.token))
     );
   }
 
@@ -23,12 +25,12 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
+    if (this.isBrowser) localStorage.removeItem(this.TOKEN_KEY);
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return this.isBrowser ? localStorage.getItem(this.TOKEN_KEY) : null;
   }
 
   isLoggedIn(): boolean {

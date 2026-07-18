@@ -3,37 +3,37 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "My_First_Angular": {
+    "admin": {
       "projectType": "application",
       "schematics": {},
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/admin",
+      "sourceRoot": "projects/admin/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/my-first-angular",
-            "index": "src/index.html",
-            "browser": "src/main.ts",
+            "outputPath": "dist/admin",
+            "index": "projects/admin/src/index.html",
+            "browser": "projects/admin/src/main.ts",
             "polyfills": ["zone.js"],
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "projects/admin/tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/admin/public"
               }
             ],
             "styles": [
-              "src/styles.css",
+              "projects/admin/src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": [],
-            "server": "src/main.server.ts",
+            "server": "projects/admin/src/main.server.ts",
             "prerender": true,
             "ssr": {
-              "entry": "server.ts"
+              "entry": "projects/admin/server.ts"
             }
           },
           "configurations": {
@@ -63,14 +63,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "proxyConfig": "proxy.conf.json"
+            "port": 4200,
+            "proxyConfig": "projects/admin/proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "buildTarget": "My_First_Angular:build:production"
+              "buildTarget": "admin:build:production"
             },
             "development": {
-              "buildTarget": "My_First_Angular:build:development"
+              "buildTarget": "admin:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -82,14 +83,14 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "tsconfig.spec.json",
+            "tsConfig": "projects/admin/tsconfig.spec.json",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/admin/public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": ["projects/admin/src/styles.css"],
             "scripts": []
           }
         }
