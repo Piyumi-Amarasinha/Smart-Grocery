@@ -4,7 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:admin": "ng serve My_First_Angular --port 4200",
+    "start:retail": "ng serve retail --port 4201",
     "build": "ng build",
+    "build:retail": "ng build retail",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "api": "node server/api/index.js",
@@ -48,6 +51,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-packagr": "^18.2.0",
     "typescript": "~5.5.2"
   }
 }

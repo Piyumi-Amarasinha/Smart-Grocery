@@ -16,6 +16,11 @@
     "declaration": false,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
+    "paths": {
+      "shared": [
+        "./projects/shared/src/public-api.ts"
+      ]
+    },
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",

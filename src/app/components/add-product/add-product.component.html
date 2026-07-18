@@ -5,158 +5,95 @@
   </div>
   <div *ngIf="submitError" class="alert alert-danger">{{ submitError }}</div>
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="row g-3">
+
     <div class="form-group">
-      <label class="form-label">Product Name</label>
-      <input type="text" class="form-control" formControlName="productName" />
-      <div
-        *ngIf="
-          f['productName'].touched &&
-          f['productName'].invalid &&
-          f['productName'].errors
-        "
-        class="error"
-      >
+      <label for="productName" class="form-label">Product Name</label>
+      <input id="productName" type="text" class="form-control" formControlName="productName" />
+      <div *ngIf="f['productName'].touched && f['productName'].invalid" class="error">
         Product name is required!
       </div>
     </div>
+
     <div class="form-group">
-      <label class="form-label">Product Description</label>
-      <input
-        type="text"
-        class="form-control"
-        formControlName="productDescription"
-      />
-      <div
-        *ngIf="
-          f['productDescription'].touched &&
-          f['productDescription'].invalid &&
-          f['productDescription'].errors
-        "
-        class="error"
-      >
+      <label for="productDescription" class="form-label">Product Description</label>
+      <input id="productDescription" type="text" class="form-control" formControlName="productDescription" />
+      <div *ngIf="f['productDescription'].touched && f['productDescription'].invalid" class="error">
         Product description is required!
       </div>
     </div>
+
     <div class="form-group">
       <div class="row">
         <div class="col-md-4">
-          <label class="form-label">Product Category</label>
-          <select class="form-control" formControlName="category">
+          <label for="category" class="form-label">Product Category</label>
+          <select id="category" class="form-control" formControlName="category">
             <option>Rice</option>
             <option>Sugar</option>
             <option>Dhal</option>
             <option>Flour</option>
+            <option>Oil</option>
+            <option>Spices</option>
+            <option>Beverages</option>
+            <option>Essentials</option>
           </select>
         </div>
         <div class="col-md-4">
-          <label class="form-label">Brand</label>
-          <input type="text" class="form-control" formControlName="brand" />
+          <label for="brand" class="form-label">Brand</label>
+          <input id="brand" type="text" class="form-control" formControlName="brand" />
         </div>
         <div class="col-md-4">
-          <label class="form-label">Batch Number</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="batchNumber"
-          />
+          <label for="batchNumber" class="form-label">Batch Number</label>
+          <input id="batchNumber" type="text" class="form-control" formControlName="batchNumber" />
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-md-6">
-          <label class="form-label">Expiry Date</label>
-          <input
-            type="date"
-            class="form-control"
-            formControlName="expireDate"
-          />
-        </div>
-        <div
-          *ngIf="
-            f['expireDate'].touched &&
-            f['expireDate'].invalid &&
-            f['expireDate'].errors
-          "
-          class="error"
-        >
-          Expiry Date is required!
-        </div>
 
-        <div class="col-md-6">
-          <label class="form-label">Manufactured Date</label>
-          <input
-            type="date"
-            class="form-control"
-            formControlName="manufacturedDate"
-          />
-        </div>
-        <div
-          *ngIf="
-            f['manufacturedDate'].touched &&
-            f['manufacturedDate'].invalid &&
-            f['manufacturedDate'].errors
-          "
-          class="error"
-        >
-          Manufactured Date is required!
-        </div>
-      </div>
-    </div>
     <div class="form-group">
       <div class="row">
         <div class="col-md-6">
-          <label class="form-label">Unit Price</label>
-          <input
-            type="number"
-            class="form-control"
-            formControlName="unitPrice"
-          />
-          <div
-            *ngIf="
-              f['unitPrice'].touched &&
-              f['unitPrice'].invalid &&
-              f['unitPrice'].errors
-            "
-            class="error"
-          >
+          <label for="expireDate" class="form-label">Expiry Date</label>
+          <input id="expireDate" type="date" class="form-control" formControlName="expireDate" />
+          <div *ngIf="f['expireDate'].touched && f['expireDate'].invalid" class="error">
+            Expiry Date is required!
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="manufacturedDate" class="form-label">Manufactured Date</label>
+          <input id="manufacturedDate" type="date" class="form-control" formControlName="manufacturedDate" />
+          <div *ngIf="f['manufacturedDate'].touched && f['manufacturedDate'].invalid" class="error">
+            Manufactured Date is required!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-6">
+          <label for="unitPrice" class="form-label">Unit Price</label>
+          <input id="unitPrice" type="number" class="form-control" formControlName="unitPrice" />
+          <div *ngIf="f['unitPrice'].touched && f['unitPrice'].invalid" class="error">
             Unit price is required!
           </div>
         </div>
-
         <div class="col-md-6">
-          <label class="form-label">Quantity</label>
-          <input
-            type="number"
-            class="form-control"
-            formControlName="quantity"
-          />
-          <div
-            *ngIf="
-              f['quantity'].touched &&
-              f['quantity'].invalid &&
-              f['quantity'].errors
-            "
-            class="error"
-          >
+          <label for="quantity" class="form-label">Quantity</label>
+          <input id="quantity" type="number" class="form-control" formControlName="quantity" />
+          <div *ngIf="f['quantity'].touched && f['quantity'].invalid" class="error">
             Quantity is required!
           </div>
         </div>
       </div>
     </div>
+
+    <div class="form-group">
+      <label for="imageUrl" class="form-label">Image URL <span class="text-muted">(optional)</span></label>
+      <input id="imageUrl" type="url" class="form-control" formControlName="imageUrl" placeholder="https://example.com/image.jpg" />
+    </div>
+
     <div class="col-12 text-end mt-5">
-      <button
-        type="button"
-        class="btn btn btn-outline-secondary me-2"
-        (click)="cancel()"
-      >
-        Cancel
-      </button>
-      <button
-        type="submit"
-        class="btn btn-outline-primary"
-        [disabled]="productForm.invalid || isSubmitting"
-      >
+      <button type="button" class="btn btn-outline-secondary me-2" (click)="cancel()">Cancel</button>
+      <button type="submit" class="btn btn-outline-primary" [disabled]="productForm.invalid || isSubmitting">
         Submit
         <i *ngIf="isSubmitting" class="fa fa-spinner fa-pulse fa-fw"></i>
       </button>

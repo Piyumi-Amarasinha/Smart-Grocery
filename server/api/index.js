@@ -24,10 +24,32 @@ const productSchema = new mongoose.Schema({
   createdDate: String,
   quantity: Number,
   unitPrice: Number,
+  imageUrl: String,
+});
+
+const orderItemSchema = new mongoose.Schema({
+  productId: Number,
+  productName: String,
+  imageUrl: String,
+  unitPrice: Number,
+  quantity: Number,
+}, { _id: false });
+
+const orderSchema = new mongoose.Schema({
+  orderId: { type: Number, required: true, unique: true },
+  items: [orderItemSchema],
+  total: Number,
+  customerName: String,
+  customerEmail: String,
+  customerPhone: String,
+  deliveryAddress: String,
+  status: { type: String, default: 'pending' },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const User = mongoose.model('User', userSchema);
 const Product = mongoose.model('Product', productSchema);
+const Order = mongoose.model('Order', orderSchema);
 
 // ── Seed admin on first run ───────────────────────────────────────────────────
 
@@ -91,7 +113,7 @@ app.post('/api/auth/login', async (req, res) => {
       { expiresIn: '8h' }
     );
     res.json({ message: 'Login successful', token });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: 'Login failed' });
   }
 });
@@ -114,11 +136,13 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// ── Product routes (protected) ────────────────────────────────────────────────
+// ── Product routes ────────────────────────────────────────────────────────────
+// GET routes are public (retail site reads without login)
+// POST / PUT / DELETE require admin auth
 
 const fields = { _id: 0, __v: 0 };
 
-app.get('/api/products', requireAuth, async (req, res) => {
+app.get('/api/products', async (req, res) => {
   try {
     const products = await Product.find({}, fields).sort({ productId: 1 });
     res.json({ message: 'Products retrieved successfully', data: products });
@@ -127,7 +151,7 @@ app.get('/api/products', requireAuth, async (req, res) => {
   }
 });
 
-app.get('/api/products/:id', requireAuth, async (req, res) => {
+app.get('/api/products/:id', async (req, res) => {
   try {
     const product = await Product.findOne({ productId: Number(req.params.id) }, fields);
     if (!product) return res.status(404).json({ message: 'Product not found' });
@@ -170,6 +194,32 @@ app.delete('/api/products/:id', requireAuth, async (req, res) => {
     res.json({ message: 'Product deleted successfully' });
   } catch {
     res.status(500).json({ message: 'Failed to delete product' });
+  }
+});
+
+// ── Order routes ──────────────────────────────────────────────────────────────
+
+app.post('/api/orders', async (req, res) => {
+  try {
+    const { items, total, customerName, customerEmail, customerPhone, deliveryAddress } = req.body;
+    if (!items?.length || !customerName || !customerEmail || !deliveryAddress) {
+      return res.status(400).json({ message: 'Missing required order fields' });
+    }
+    const last = await Order.findOne().sort({ orderId: -1 });
+    const orderId = last ? last.orderId + 1 : 1001;
+    await Order.create({ orderId, items, total, customerName, customerEmail, customerPhone, deliveryAddress });
+    res.status(201).json({ message: 'Order placed successfully', orderId });
+  } catch {
+    res.status(500).json({ message: 'Failed to place order' });
+  }
+});
+
+app.get('/api/orders', requireAuth, async (req, res) => {
+  try {
+    const orders = await Order.find({}, { __v: 0 }).sort({ createdAt: -1 });
+    res.json({ message: 'Orders retrieved successfully', data: orders });
+  } catch {
+    res.status(500).json({ message: 'Failed to retrieve orders' });
   }
 });
 

@@ -1,0 +1,39 @@
+<div class="page-wrapper" *ngIf="!isLoading()">
+  <div *ngIf="loadError()" class="alert alert-danger">{{ loadError() }}</div>
+
+  <div *ngIf="product() as p" class="detail-layout">
+    <div class="detail-img-col">
+      <img
+        [src]="p.imageUrl || 'https://placehold.co/500x400?text=' + p.productName"
+        [alt]="p.productName"
+        class="detail-img"
+      />
+    </div>
+
+    <div class="detail-info-col">
+      <span class="detail-category">{{ p.category }}</span>
+      <h1 class="detail-name">{{ p.productName }}</h1>
+      <p class="detail-brand">{{ p.brand }}</p>
+      <p class="detail-desc">{{ p.productDescription }}</p>
+      <p class="detail-price">Rs. {{ p.unitPrice | number:'1.2-2' }}</p>
+      <p class="detail-stock" [class.low]="p.quantity <= 10">
+        {{ p.quantity > 0 ? 'In Stock (' + p.quantity + ' available)' : 'Out of Stock' }}
+      </p>
+
+      <div class="qty-row">
+        <button class="qty-btn" (click)="decrement()">−</button>
+        <span class="qty-val">{{ qty() }}</span>
+        <button class="qty-btn" (click)="increment()">+</button>
+      </div>
+
+      <button class="btn-add" [class.btn-added]="added()" (click)="addToCart()" [disabled]="p.quantity === 0">
+        {{ added() ? '✓ Added to Cart' : 'Add to Cart' }}
+      </button>
+
+      <a routerLink="/cart" class="view-cart-link">View Cart ({{ cart.count }} items)</a>
+      <a routerLink="/products" class="back-link">← Back to products</a>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoading()" class="page-wrapper loading-state">Loading...</div>

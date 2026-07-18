@@ -1,0 +1,53 @@
+<div class="page-wrapper">
+  <h1 class="page-title">Checkout</h1>
+
+  <div class="checkout-layout">
+    <div class="checkout-form-col">
+      <h2 class="section-title">Delivery Details</h2>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div *ngIf="submitError" class="alert alert-danger">{{ submitError }}</div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-control" formControlName="customerName" placeholder="John Silva" />
+          <div *ngIf="f['customerName'].touched && f['customerName'].invalid" class="field-error">Name is required</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-control" formControlName="customerEmail" placeholder="john@example.com" />
+          <div *ngIf="f['customerEmail'].touched && f['customerEmail'].invalid" class="field-error">Valid email is required</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input type="tel" class="form-control" formControlName="customerPhone" placeholder="07X XXX XXXX" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Delivery Address *</label>
+          <textarea class="form-control" formControlName="deliveryAddress" rows="3" placeholder="No. 12, Main Street, Colombo 07"></textarea>
+          <div *ngIf="f['deliveryAddress'].touched && f['deliveryAddress'].invalid" class="field-error">Address is required</div>
+        </div>
+
+        <button type="submit" class="btn-place-order" [disabled]="form.invalid || isSubmitting || !cart.items.length">
+          <span *ngIf="isSubmitting"><i class="fa fa-spinner fa-pulse"></i> Placing order...</span>
+          <span *ngIf="!isSubmitting">Place Order</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="order-summary-col">
+      <h2 class="section-title">Order Summary</h2>
+      <div class="summary-item" *ngFor="let item of cart.items">
+        <span>{{ item.productName }} × {{ item.quantity }}</span>
+        <span>Rs. {{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</span>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <strong>Rs. {{ cart.total | number:'1.2-2' }}</strong>
+      </div>
+      <a routerLink="/cart" class="edit-cart-link">Edit cart</a>
+    </div>
+  </div>
+</div>

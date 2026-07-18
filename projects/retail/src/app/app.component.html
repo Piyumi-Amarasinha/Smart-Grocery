@@ -1,0 +1,12 @@
+<nav class="navbar">
+  <a routerLink="/products" class="navbar-brand">Smart Grocery</a>
+  <div class="navbar-links">
+    <a routerLink="/products">Shop</a>
+    <a routerLink="/cart" class="cart-link">
+      Cart
+      <span *ngIf="cart.count > 0" class="cart-badge">{{ cart.count }}</span>
+    </a>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>

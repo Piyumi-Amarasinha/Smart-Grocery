@@ -39,6 +39,7 @@ export class AddProductComponent implements OnInit {
       manufacturedDate: ['', Validators.required],
       unitPrice: ['', [Validators.required, Validators.min(1)]],
       quantity: ['', [Validators.required, Validators.min(1)]],
+      imageUrl: [''],
     });
   }
 

@@ -1,0 +1,41 @@
+<div class="page-wrapper">
+  <h1 class="page-title">Your Cart</h1>
+
+  <div *ngIf="cart.items.length === 0" class="empty-state">
+    <p>Your cart is empty.</p>
+    <a routerLink="/products" class="btn-continue">Browse Products</a>
+  </div>
+
+  <div *ngIf="cart.items.length > 0">
+    <div class="cart-item" *ngFor="let item of cart.items">
+      <img
+        [src]="item.imageUrl || 'https://placehold.co/80x80?text=img'"
+        [alt]="item.productName"
+        class="item-img"
+      />
+      <div class="item-info">
+        <p class="item-name">{{ item.productName }}</p>
+        <p class="item-price">Rs. {{ item.unitPrice | number:'1.2-2' }} each</p>
+      </div>
+      <div class="item-qty">
+        <input
+          type="number"
+          class="qty-input"
+          [value]="item.quantity"
+          min="1"
+          (change)="updateQty(item.productId, $event)"
+        />
+      </div>
+      <p class="item-subtotal">Rs. {{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</p>
+      <button class="btn-remove" (click)="cart.removeItem(item.productId)">✕</button>
+    </div>
+
+    <div class="cart-footer">
+      <p class="cart-total">Total: <strong>Rs. {{ cart.total | number:'1.2-2' }}</strong></p>
+      <div class="cart-actions">
+        <a routerLink="/products" class="btn-continue">Continue Shopping</a>
+        <a routerLink="/checkout" class="btn-checkout">Proceed to Checkout</a>
+      </div>
+    </div>
+  </div>
+</div>

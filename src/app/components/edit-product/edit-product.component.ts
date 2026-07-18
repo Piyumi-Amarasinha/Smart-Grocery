@@ -44,6 +44,7 @@ export class EditProductComponent implements OnInit {
       manufacturedDate: ['', Validators.required],
       unitPrice: ['', [Validators.required, Validators.min(1)]],
       quantity: ['', [Validators.required, Validators.min(1)]],
+      imageUrl: [''],
     });
 
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
